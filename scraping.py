@@ -5,13 +5,13 @@ import pandas as pd
 import datetime as dt
 from webdriver_manager.chrome import ChromeDriverManager
 
-
 def scrape_all():
     # Initiate headless driver for deployment
     executable_path = {'executable_path': ChromeDriverManager().install()}
     browser = Browser('chrome', **executable_path, headless=True)
 
     news_title, news_paragraph = mars_news(browser)
+    img_urls_titles = mars_hemis(browser)
 
     # Run all scraping functions and store results in a dictionary
     data = {
@@ -19,6 +19,7 @@ def scrape_all():
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
+        "hemispheres": img_urls_titles,
         "last_modified": dt.datetime.now()
     }
 
@@ -96,11 +97,6 @@ def mars_facts():
 
     # Convert dataframe into HTML format, add bootstrap
     return df.to_html(classes="table table-striped")
-
-if __name__ == "__main__":
-
-    # If running as script, print scraped data
-    print(scrape_all())
 
 def mars_hemis(browser):
     url = 'https://marshemispheres.com/'
